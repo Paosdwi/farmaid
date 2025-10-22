@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>田間調查表單</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { 
+            font-family: 'Noto Sans TC', sans-serif; 
+            background: linear-gradient(180deg, #a8d0f0 0%, #c8e3f7 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 雲朵動畫 */
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50px;
+            opacity: 0.7;
+            animation: float 20s infinite linear;
+        }
+        
+        .cloud::before, .cloud::after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50px;
+        }
+        
+        .cloud1 {
+            width: 80px;
+            height: 30px;
+            top: 20%;
+            left: -100px;
+        }
+        
+        .cloud1::before {
+            width: 50px;
+            height: 40px;
+            top: -20px;
+            left: 10px;
+        }
+        
+        .cloud1::after {
+            width: 60px;
+            height: 35px;
+            top: -15px;
+            right: 10px;
+        }
+        
+        .cloud2 {
+            width: 60px;
+            height: 25px;
+            top: 10%;
+            left: -80px;
+            animation-delay: -10s;
+        }
+        
+        .cloud2::before {
+            width: 40px;
+            height: 30px;
+            top: -15px;
+            left: 8px;
+        }
+        
+        .cloud2::after {
+            width: 45px;
+            height: 28px;
+            top: -12px;
+            right: 8px;
+        }
+        
+        .cloud3 {
+            width: 70px;
+            height: 28px;
+            top: 30%;
+            left: -90px;
+            animation-delay: -15s;
+        }
+        
+        .cloud3::before {
+            width: 45px;
+            height: 35px;
+            top: -18px;
+            left: 12px;
+        }
+        
+        .cloud3::after {
+            width: 55px;
+            height: 32px;
+            top: -14px;
+            right: 12px;
+        }
+        
+        @keyframes float {
+            0% { transform: translateX(-100px); }
+            100% { transform: translateX(calc(100vw + 100px)); }
+        }
+        
+        /* 太陽 */
+        .sun {
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            width: 60px;
+            height: 60px;
+            background: #ffd700;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            animation: pulse 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+            100% { transform: scale(1.1); box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
+        }
+        
+        /* 歡迎框樣式 */
+        .welcome-box {
+            background: linear-gradient(135deg, #f4c79a 0%, #f7d4a3 100%);
+            border: 2px solid #e8b574;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .welcome-box::before {
+            content: '🌱';
+            position: absolute;
+            top: -5px;
+            left: 15px;
+            font-size: 24px;
+        }
+        
+        /* 表單容器 */
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            margin: 20px 0;
+        }
+        
+        /* 資訊框樣式 */
+        .info-box {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #90EE90;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 按鈕樣式 */
+        .btn-submit {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+        }
+        
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4);
+        }
+        
+        /* 輸入框樣式 */
+        .form-control {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+        }
+        
+        /* 照片預覽 */
+        .photo-preview {
+            max-width: 200px;
+            border-radius: 10px;
+            border: 3px solid #4CAF50;
+            display: none;
+            margin-top: 10px;
+        }
+        
+        /* 位置圖標 */
+        .location-icon {
+            color: #4CAF50;
+            font-size: 18px;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景裝飾 -->
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="cloud cloud3"></div>
+    <div class="sun"></div>
+    
+    <div class="container mt-5 max-w-md mx-auto p-4">
+        <!-- 歡迎框 -->
+        <div class="welcome-box text-center">
+            <h3 class="mb-2 text-amber-800 font-bold">填報問題</h3>
+            <p class="mb-0 text-amber-700">請填報您的問題</p>
+        </div>
+        
+        <!-- 今日天氣資訊 -->
+        <div class="info-box">
+            <h5 class="text-green-600 font-bold mb-3">📊 今日天氣資訊</h5>
+            <div class="row text-sm">
+                <div class="col-6">
+                    <span class="text-gray-600">天氣狀況：</span>
+                    <span class="text-blue-600 font-semibold">Clouds</span>
+                </div>
+                <div class="col-6">
+                    <span class="text-gray-600">溫度：</span>
+                    <span class="text-red-500 font-semibold">27.53°C</span>
+                </div>
+                <div class="col-12 mt-2">
+                    <span class="text-gray-600">濕度：</span>
+                    <span class="text-blue-500 font-semibold">78%</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 位置資訊 -->
+        <div class="info-box">
+            <h5 class="text-green-600 font-bold mb-3">📍 位置資訊</h5>
+            <div class="text-sm">
+                <p class="mb-1">
+                    <span class="location-icon">📍</span>
+                    緯度：-23.6676 / 經度：120.5511
+                </p>
+                <p class="mb-0">
+                    <span class="location-icon">🌍</span>
+                    當前位置：📍 Changzhi
+                </p>
+            </div>
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-success bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4 rounded">{{ messages[0] }}</div>
+            {% endif %}
+        {% endwith %}
+        
+        <!-- 主要表單 -->
+        <div class="form-container">
+            <h2 class="text-2xl font-bold text-center text-green-600 mb-4">田間調查表單</h2>
+            
+            <form method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="applicant" class="form-label text-lg font-semibold text-gray-700">申請人 (果園單位)</label>
+                    <input type="text" class="form-control" id="applicant" name="applicant" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="phone" class="form-label text-lg font-semibold text-gray-700">電話</label>
+                    <input type="text" class="form-control" id="phone" name="phone" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label text-lg font-semibold text-gray-700">GPS 經緯度 (自動獲取)</label>
+                    <div class="bg-gray-50 p-3 rounded-lg border">
+                        <p class="mb-1">經度: <span id="gps-lat" class="font-bold text-green-600">未獲取</span></p>
+                        <p class="mb-0">緯度: <span id="gps-lon" class="font-bold text-green-600">未獲取</span></p>
+                    </div>
+                    <input type="hidden" id="gps_lat" name="gps_lat" value="">
+                    <input type="hidden" id="gps_lon" name="gps_lon" value="">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="location" class="form-label text-lg font-semibold text-gray-700">位置 (縣市)</label>
+                    <input type="text" class="form-control" id="location" name="location" value="" readonly>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="plant_name" class="form-label text-lg font-semibold text-gray-700">作物名稱</label>
+                    <input type="text" class="form-control" id="plant_name" name="plant_name" required>
+                </div>
+                <div class="mb-3">
+    <label for="problem_desc" class="form-label text-lg font-semibold text-gray-700">問題描述</label>
+    <textarea class="form-control" id="problem_desc" name="problem_desc" rows="4" placeholder="請描述作物出現的狀況，例如：葉片變黃、有斑點、枯萎等..." required></textarea>
+</div>
+                
+                <div class="mb-3">
+                    <label class="form-label text-lg font-semibold text-gray-700">照片 (整株作物)</label>
+                    <div class="photo-option">
+                        <input type="file" class="form-control" id="photo_whole" name="photo_whole" accept="image/*" onchange="previewImage('photo_whole_preview', this)">
+                        <img id="photo_whole_preview" src="#" alt="預覽" class="photo-preview">
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label text-lg font-semibold text-gray-700">照片 (受影響區域)</label>
+                    <div class="photo-option">
+                        <input type="file" class="form-control" id="photo_affected" name="photo_affected" accept="image/*" onchange="previewImage('photo_affected_preview', this)">
+                        <img id="photo_affected_preview" src="#" alt="預覽" class="photo-preview">
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label text-lg font-semibold text-gray-700">照片 (損壞狀況)</label>
+                    <div class="photo-option">
+                        <input type="file" class="form-control" id="photo_condition" name="photo_condition" accept="image/*" onchange="previewImage('photo_condition_preview', this)">
+                        <img id="photo_condition_preview" src="#" alt="預覽" class="photo-preview">
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <button type="submit" class="btn-submit w-100 mb-3">📝 提交問題</button>
+                    <a href="{{ url_for('index') }}" class="btn-danger w-100">返回首頁</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 自動填入 GPS 經緯度並更新縣市
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        document.getElementById('gps-lat').textContent = lat.toFixed(4);
+                        document.getElementById('gps-lon').textContent = lon.toFixed(4);
+                        document.getElementById('gps_lat').value = lat;
+                        document.getElementById('gps_lon').value = lon;
+
+                        // 調用逆向地理編碼 API 獲取縣市
+                        fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=4cfc391b51a8690e97b30b16f7132aef`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data && data.length > 0) {
+                                    const city = data[0].name;
+                                    document.getElementById('location').value = city;
+                                } else {
+                                    document.getElementById('location').value = '無法確定';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Geocoding Error:', error);
+                                document.getElementById('location').value = '無法確定';
+                            });
+                    },
+                    function(error) {
+                        console.error('GPS Error:', error);
+                        alert('無法獲取 GPS 位置，請檢查權限！');
+                        document.getElementById('gps_lat').value = '';
+                        document.getElementById('gps_lon').value = '';
+                        document.getElementById('location').value = '無法確定';
+                    }
+                );
+            } else {
+                alert('瀏覽器不支援 GPS 定位！');
+                document.getElementById('gps_lat').value = '';
+                document.getElementById('gps_lon').value = '';
+                document.getElementById('location').value = '無法確定';
+            }
+        }
+
+        // 預覽圖片
+        function previewImage(previewId, input) {
+            const preview = document.getElementById(previewId);
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // 頁面載入時自動獲取定位
+        window.onload = getLocation;
+    </script>
+</body>
+</html>

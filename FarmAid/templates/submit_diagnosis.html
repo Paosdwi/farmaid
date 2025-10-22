@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提供診斷</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { 
+            font-family: 'Noto Sans TC', sans-serif; 
+            background: linear-gradient(180deg, #a8d0f0 0%, #c8e3f7 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 雲朵動畫 */
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50px;
+            opacity: 0.7;
+            animation: float 20s infinite linear;
+        }
+        
+        .cloud::before, .cloud::after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50px;
+        }
+        
+        .cloud1 {
+            width: 80px;
+            height: 30px;
+            top: 20%;
+            left: -100px;
+        }
+        
+        .cloud1::before {
+            width: 50px;
+            height: 40px;
+            top: -20px;
+            left: 10px;
+        }
+        
+        .cloud1::after {
+            width: 60px;
+            height: 35px;
+            top: -15px;
+            right: 10px;
+        }
+        
+        .cloud2 {
+            width: 60px;
+            height: 25px;
+            top: 10%;
+            left: -80px;
+            animation-delay: -10s;
+        }
+        
+        .cloud2::before {
+            width: 40px;
+            height: 30px;
+            top: -15px;
+            left: 8px;
+        }
+        
+        .cloud2::after {
+            width: 45px;
+            height: 28px;
+            top: -12px;
+            right: 8px;
+        }
+        
+        .cloud3 {
+            width: 70px;
+            height: 28px;
+            top: 30%;
+            left: -90px;
+            animation-delay: -15s;
+        }
+        
+        .cloud3::before {
+            width: 45px;
+            height: 35px;
+            top: -18px;
+            left: 12px;
+        }
+        
+        .cloud3::after {
+            width: 55px;
+            height: 32px;
+            top: -14px;
+            right: 12px;
+        }
+        
+        @keyframes float {
+            0% { transform: translateX(-100px); }
+            100% { transform: translateX(calc(100vw + 100px)); }
+        }
+        
+        /* 太陽 */
+        .sun {
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            width: 60px;
+            height: 60px;
+            background: #ffd700;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            animation: pulse 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+            100% { transform: scale(1.1); box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
+        }
+        
+        /* 歡迎框樣式 */
+        .welcome-box {
+            background: linear-gradient(135deg, #f4c79a 0%, #f7d4a3 100%);
+            border: 2px solid #e8b574;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .welcome-box::before {
+            content: '🔬';
+            position: absolute;
+            top: -5px;
+            left: 15px;
+            font-size: 24px;
+        }
+        
+        /* 卡片容器 */
+        .card-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* 資訊行 */
+        .info-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .info-icon {
+            font-size: 18px;
+            margin-right: 10px;
+            width: 25px;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #555;
+            min-width: 60px;
+        }
+        
+        .info-value {
+            color: #333;
+            flex: 1;
+        }
+        
+        /* 照片容器 */
+        .photo-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .photo-title {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin: -15px -15px 15px -15px;
+            font-weight: bold;
+        }
+        
+        /* Lightbox 相關樣式 */
+        img.lb-img {
+            max-width: 200px;
+            cursor: zoom-in;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        img.lb-img:hover {
+            transform: scale(1.05);
+        }
+
+        .lb-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        
+        .lb-backdrop.show { 
+            display: flex; 
+        }
+
+        .lb-content img {
+            max-width: 90vw;
+            max-height: 85vh;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            border-radius: 12px;
+        }
+
+        .lb-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 28px;
+            line-height: 28px;
+            width: 40px;
+            height: 40px;
+            border-radius: 9999px;
+            background: rgba(255,255,255,0.9);
+            color: #111;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .lb-close:hover { 
+            filter: brightness(0.9); 
+        }
+        
+        /* 表單樣式 */
+        .form-group { 
+            margin-bottom: 15px; 
+        }
+        
+        label { 
+            display: block; 
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        textarea { 
+            width: 100%; 
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            resize: vertical;
+        }
+        
+        textarea:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+            outline: none;
+        }
+        
+        /* 按鈕樣式 */
+        .btn-submit {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            width: 100%;
+            cursor: pointer;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+            filter: brightness(110%);
+        }
+        
+        .btn-back {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+        
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+            color: white;
+        }
+        
+        /* 無照片提示 */
+        .no-photo {
+            color: #6c757d;
+            font-style: italic;
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+        }
+        
+        /* 容器樣式 */
+        .container-custom {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 背景裝飾 -->
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="cloud cloud3"></div>
+    <div class="sun"></div>
+    
+    <div class="container-custom">
+        <!-- 歡迎框 -->
+        <div class="welcome-box text-center">
+            <h3 class="mb-2 text-amber-800 font-bold">專家診斷服務</h3>
+            <p class="mb-0 text-amber-700">為農作物提供建議</p>
+        </div>
+        
+        <h1 class="text-2xl font-bold text-center text-green-600 mb-4">提供診斷 for 提交 #{{ submission[0] }}</h1>
+        
+        <!-- 基本資訊卡片 -->
+        <div class="card-container">
+            <div class="info-row">
+                <span class="info-icon">👤</span>
+                <span class="info-label">申請人:</span>
+                <span class="info-value">{{ submission[1] }}</span>
+            </div>
+            
+            <div class="info-row">
+  <span class="info-icon">🌱</span>
+  <span class="info-label">植物:</span>
+  <span class="info-value">{{ submission[5] }}</span>
+</div>
+
+<div class="info-row">
+  <span class="info-icon">📝</span>
+  <span class="info-label">問題描述:</span>
+  <span class="info-value">{{ submission[15] or '（未填寫）' }}</span>
+</div>
+
+<div class="info-row" style="border-bottom: none;">
+  <span class="info-icon">📍</span>
+  <span class="info-label">位置:</span>
+  <span class="info-value">{{ submission[6] }}</span>
+</div>
+ <div class="info-row">
+                        <span class="info-icon">📅</span>
+                        <span class="info-label">提交日期:</span>
+                        <span class="info-value">{{ submission[13] }}</span>
+                    </div>
+
+<!-- 整株作物 -->
+<div class="photo-container">
+  <div class="photo-title">📸 整株作物</div>
+  {% if submission[7] %}
+    <img class="lb-img" src="{{ url_for('static', filename='uploads/' + submission[7]) }}" alt="整株作物">
+  {% else %}
+    <div class="no-photo">📷 無照片</div>
+  {% endif %}
+</div>
+
+<!-- 受影響區域 -->
+<div class="photo-container">
+  <div class="photo-title">🔍 受影響區域</div>
+  {% if submission[8] %}
+    <img class="lb-img" src="{{ url_for('static', filename='uploads/' + submission[8]) }}" alt="受影響區域">
+  {% else %}
+    <div class="no-photo">📷 無照片</div>
+  {% endif %}
+</div>
+
+<!-- 損壞狀況 -->
+<div class="photo-container">
+  <div class="photo-title">⚠️ 損壞狀況</div>
+  {% if submission[9] %}
+    <img class="lb-img" src="{{ url_for('static', filename='uploads/' + submission[9]) }}" alt="損壞狀況">
+  {% else %}
+    <div class="no-photo">📷 無照片</div>
+  {% endif %}
+</div>
+        
+        <!-- 診斷表單 -->
+        <form method="POST" class="card-container">
+            <div class="form-group">
+                <label for="diagnosis">🔬 診斷結果</label>
+                <textarea id="diagnosis" name="diagnosis" rows="4" required placeholder="請輸入詳細的診斷結果和建議..."></textarea>
+            </div>
+            <button type="submit" class="btn-submit">✅ 提交診斷</button>
+        </form>
+        
+        <!-- 返回按鈕 -->
+        <a href="{{ url_for('diagnosis_service') }}" class="btn-back">🏠 返回診斷服務</a>
+    </div>
+    
+    <!-- Lightbox 容器 -->
+    <div id="lightbox" class="lb-backdrop" aria-modal="true" role="dialog">
+        <div class="lb-close" id="lb-close" aria-label="Close">✕</div>
+        <div class="lb-content">
+            <img id="lb-image" src="" alt="預覽圖片">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const lb = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lb-image');
+            const lbClose = document.getElementById('lb-close');
+
+            // 監聽所有可放大的圖片
+            document.querySelectorAll('img.lb-img').forEach(img => {
+                img.addEventListener('click', () => {
+                    const full = img.dataset.fullsrc || img.src;
+                    lbImg.src = full;
+                    lb.classList.add('show');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            function closeLB() {
+                lb.classList.remove('show');
+                lbImg.src = '';
+                document.body.style.overflow = '';
+            }
+
+            // 點背景或關閉按鈕關閉
+            lb.addEventListener('click', (e) => {
+                if (e.target === lb) closeLB();
+            });
+            lbClose.addEventListener('click', closeLB);
+
+            // ESC 關閉
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && lb.classList.contains('show')) {
+                    closeLB();
+                }
+            });
+
+            // 雙擊圖片也可關閉
+            lbImg.addEventListener('dblclick', closeLB);
+        });
+    </script>
+</body>
+</html>

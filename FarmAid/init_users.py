@@ -1,0 +1,15 @@
+import sqlite3
+conn = sqlite3.connect('agri_diagnosis.db')
+c = conn.cursor()
+
+c.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", ('farmer3', 'password123', 'farmer'))
+c.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", ('farmer4', 'password123', 'farmer'))
+c.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", ('farmer5', 'password123', 'farmer'))
+c.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", ('farmer6', 'password123', 'farmer'))
+c.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", ('farmer7', 'password123', 'farmer'))
+c.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", ('farmer8', 'password123', 'farmer'))
+c.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", ('farmer9', 'password123', 'farmer'))
+c.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", ('farmer10', 'password123', 'farmer'))
+conn.commit()
+conn.close()
+print("Test users added successfully!")

@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>農場管理系統 - 登入</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, #87CEEB 0%, #98D8E8 30%, #90EE90 70%, #8FBC8F 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 雲朵背景 */
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 100px;
+            opacity: 0.6;
+        }
+
+        .cloud::before,
+        .cloud::after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 100px;
+        }
+
+        .cloud1 {
+            width: 100px;
+            height: 40px;
+            top: 20%;
+            left: 10%;
+            animation: float 20s infinite linear;
+        }
+
+        .cloud1::before {
+            width: 50px;
+            height: 50px;
+            top: -25px;
+            left: 10px;
+        }
+
+        .cloud1::after {
+            width: 60px;
+            height: 60px;
+            top: -35px;
+            right: 10px;
+        }
+
+        .cloud2 {
+            width: 80px;
+            height: 30px;
+            top: 15%;
+            right: 20%;
+            animation: float 25s infinite linear reverse;
+        }
+
+        .cloud2::before {
+            width: 40px;
+            height: 40px;
+            top: -20px;
+            left: 15px;
+        }
+
+        .cloud2::after {
+            width: 50px;
+            height: 50px;
+            top: -25px;
+            right: 15px;
+        }
+
+        @keyframes float {
+            from { transform: translateX(-100px); }
+            to { transform: translateX(calc(100vw + 100px)); }
+        }
+
+        /* 太陽 */
+        .sun {
+            position: absolute;
+            top: 10%;
+            right: 15%;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #FFD700 0%, #FFA500 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            animation: sunRays 8s ease-in-out infinite;
+        }
+
+        .sun::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            background: 
+                linear-gradient(0deg, transparent 45%, #FFD700 50%, transparent 55%),
+                linear-gradient(45deg, transparent 45%, #FFD700 50%, transparent 55%),
+                linear-gradient(90deg, transparent 45%, #FFD700 50%, transparent 55%),
+                linear-gradient(135deg, transparent 45%, #FFD700 50%, transparent 55%);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        @keyframes sunRays {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+        }
+
+        /* 小鳥 */
+        .bird {
+            position: absolute;
+            top: 25%;
+            left: 70%;
+            width: 20px;
+            height: 20px;
+            animation: flyBird 15s infinite linear;
+        }
+
+        .bird::before,
+        .bird::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 8px;
+            background: #8B4513;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            transform-origin: center;
+            animation: flapWings 0.5s infinite alternate;
+        }
+
+        .bird::before {
+            left: -8px;
+            transform: rotate(-30deg);
+        }
+
+        .bird::after {
+            right: -8px;
+            transform: rotate(30deg);
+        }
+
+        @keyframes flyBird {
+            from { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(200px) translateY(-20px); }
+            50% { transform: translateX(400px) translateY(10px); }
+            75% { transform: translateX(200px) translateY(-10px); }
+            to { transform: translateX(0) translateY(0); }
+        }
+
+        @keyframes flapWings {
+            0% { transform: rotate(-45deg); }
+            100% { transform: rotate(-15deg); }
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        .login-card {
+            background: linear-gradient(145deg, #F5DEB3 0%, #DEB887 50%, #D2B48C 100%);
+            border: 3px solid #8B4513;
+            border-radius: 25px;
+            padding: 40px 35px;
+            box-shadow: 
+                0 15px 35px rgba(139, 69, 19, 0.3),
+                inset 0 2px 5px rgba(255, 255, 255, 0.4);
+            position: relative;
+        }
+
+        /* 木紋效果 */
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 1px,
+                    rgba(139, 69, 19, 0.1) 1px,
+                    rgba(139, 69, 19, 0.1) 2px
+                );
+            border-radius: 22px;
+            pointer-events: none;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .login-title {
+            color: #8B4513;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(139, 69, 19, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .login-subtitle {
+            color: #A0522D;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* 錯誤訊息 */
+        .alert {
+            background: linear-gradient(145deg, #FFE4E1, #FFC0CB);
+            border: 2px solid #CD5C5C;
+            color: #8B0000;
+            padding: 15px 18px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .alert::before {
+            content: '⚠️';
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        /* 表單樣式 */
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            color: #8B4513;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid #DEB887;
+            border-radius: 15px;
+            padding: 15px 18px;
+            color: #8B4513;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 5px rgba(139, 69, 19, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: #A0522D;
+            opacity: 0.7;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #228B22;
+            background: #FFFFFF;
+            box-shadow: 
+                0 0 0 3px rgba(34, 139, 34, 0.2),
+                inset 0 2px 5px rgba(139, 69, 19, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .login-btn {
+            width: 100%;
+            background: linear-gradient(145deg, #32CD32 0%, #228B22 100%);
+            color: #FFFFFF;
+            border: 3px solid #006400;
+            border-radius: 15px;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            text-shadow: 1px 1px 2px rgba(0, 100, 0, 0.5);
+            box-shadow: 0 6px 12px rgba(34, 139, 34, 0.3);
+            position: relative;
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(145deg, #228B22 0%, #006400 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(34, 139, 34, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(34, 139, 34, 0.3);
+        }
+
+        /* 裝飾元素 */
+        .wheat-decoration {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            font-size: 24px;
+            color: #DAA520;
+            animation: sway 3s ease-in-out infinite;
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 16px;
+            }
+            
+            .login-card {
+                padding: 30px 25px;
+            }
+
+            .login-title {
+                font-size: 24px;
+            }
+
+            .sun {
+                width: 60px;
+                height: 60px;
+                top: 8%;
+                right: 10%;
+            }
+        }
+
+        /* 載入狀態 */
+        .loading {
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid transparent;
+            border-top: 3px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景裝飾 -->
+    <div class="sun"></div>
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="bird"></div>
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="wheat-decoration">🌾</div>
+            
+            <div class="login-header">
+                <h1 class="login-title">
+                    作物病蟲害諮詢系統
+                </h1>
+                
+            </div>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="alert">
+                        {{ messages[0] }}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" id="loginForm">
+                <div class="form-group">
+                    <label for="username" class="form-label">
+                       帳號密碼
+                    </label>
+                    <input type="text" 
+                           class="form-input" 
+                           id="username" 
+                           name="username" 
+                           placeholder="請輸入您的帳號"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">
+                         輸入密碼
+                    </label>
+                    <input type="password" 
+                           class="form-input" 
+                           id="password" 
+                           name="password" 
+                           placeholder="請輸入您的密碼"
+                           required>
+                </div>
+
+                <button type="submit" class="login-btn" id="loginBtn">
+                    登入
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            const btn = document.getElementById('loginBtn');
+            btn.classList.add('loading');
+            btn.innerHTML = '🌱 正在進入農場';
+        });
+
+        // Enter 鍵支援
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.target.matches('.form-input')) {
+                e.preventDefault();
+                document.getElementById('loginForm').submit();
+            }
+        });
+
+        // 隨機生成更多雲朵
+        function createRandomCloud() {
+            const cloud = document.createElement('div');
+            cloud.className = 'cloud';
+            cloud.style.width = (60 + Math.random() * 40) + 'px';
+            cloud.style.height = (20 + Math.random() * 20) + 'px';
+            cloud.style.top = (10 + Math.random() * 30) + '%';
+            cloud.style.left = '-100px';
+            cloud.style.animation = `float ${20 + Math.random() * 15}s infinite linear`;
+            document.body.appendChild(cloud);
+            
+            setTimeout(() => {
+                cloud.remove();
+            }, 35000);
+        }
+
+        // 每隔一段時間生成新雲朵
+        setInterval(createRandomCloud, 8000);
+    </script>
+</body>
+</html>
